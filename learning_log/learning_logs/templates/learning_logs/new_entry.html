@@ -1,0 +1,16 @@
+{% extends "learning_logs/base.html" %}
+
+{% block content %}
+
+  <p><a href="{% url 'learning_logs:topic' topic.id %}">{{ topic }}</a></p>
+
+  <p>Add a new entry:</p>
+  <form action="{% url 'learning_logs:new_entry' topic.id %}" method='post'>
+  <!--实参action:告诉服务器将用户提交的表单数据发送到哪里，这里我们将它发回给视图函数new_entry()-->
+  <!--表单的实参action包含URL中的topic_id值，让视图函数能够将新条目关联到正确的主题. 除此之外，这个模板与模板new_topic.html完全相同-->
+    {% csrf_token %} <!--安全-->
+    {{ form.as_p }}  <!--格式-->
+    <button name='submit'>add entry</button>
+  </form>
+  
+{% endblock content %}
