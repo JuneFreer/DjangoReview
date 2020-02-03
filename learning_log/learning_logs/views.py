@@ -1,6 +1,6 @@
 from django.shortcuts import render
 
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, Http404
 from django.urls import reverse
 from django.contrib.auth.decorators import login_required #导入了函数login_required()，将它作为装饰器@login_required用于视图函数topics(),让Python在运行topics()的代码前先运行login_required()的代码
 
@@ -26,6 +26,8 @@ def topics(request):
 def topic(request, topic_id): # 函数topic()捕获用户输入的URL中topic_id的值，并将其存储到形参topic_id中
     """显示单个主题topic及其所有的条目"""
     topic = Topic.objects.get(id=topic_id) # 我们使用get()来获取指定id的主题
+    if topic.owner != request.user:# 确认请求的主题关联于当前用户, 引发Http404异常
+        raise Http404
     entries = topic.entry_set.order_by('-date_added')
     # 获取与该主题(topic)相关联的条目entries, 是先执行了上面那条语句，有了具体的topic，才能执行这一句
     context = {'topic': topic, 'entries': entries} # 将主题和条目都存储在字典context中
@@ -76,6 +78,8 @@ def edit_entry(request, entry_id):
     #获取用户要修改的条目对象，以及与该条目相关联的主题
     entry = Entry.objects.get(id=entry_id) #通过entry_id从数据库表Entry中获取特定条目
     topic = entry.topic #通过entry的topic属性，获取entry所属的特定主题
+    if topic.owner != request.user:
+        raise Http404
 
     if request.method != 'POST':
         # 初次请求，使用当前条目(instance=entry)填充表单
