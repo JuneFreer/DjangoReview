@@ -17,7 +17,8 @@ def index(request): # request是用户输入的URL请求对象
 #login_required()的代码检查用户是否已登录，仅当用户已登录时，Django才运行topics() 的代码。如果用户未登录，就重定向到登录页面
 def topics(request):
     """显示所有的主题 topics"""
-    topics = Topic.objects.order_by('date_added') # Topic是一个Model子类，objects.order_by()是这个类中的方法
+    topics = Topic.objects.filter(owner=request.user).order_by('date_added') # Topic是一个Model子类，objects.order_by()是这个类中的方法
+    #用户登录后，request对象将有一个user属性，这个属性存储了有关该用户的信息.Topic.objects.filter(owner=request.user)让Django只从数据库中获取owner属性为当前用户的 Topic对象
     context = {'topics': topics}
     return render(request, 'learning_logs/topics.html', context)
 
