@@ -1,6 +1,8 @@
 from django.shortcuts import render
+
 from django.http import HttpResponseRedirect
 from django.urls import reverse
+from django.contrib.auth.decorators import login_required #导入了函数login_required()，将它作为装饰器@login_required用于视图函数topics(),让Python在运行topics()的代码前先运行login_required()的代码
 
 from .models import Topic, Entry
 from .forms import TopicForm, EntryForm # 引入模块forms.py中的TopicForm, EntryForm模型/类
@@ -11,12 +13,15 @@ def index(request): # request是用户输入的URL请求对象
     return render(request, 'learning_logs/index.html') # arg1: user's URL request, arg2: 一个可用于创建网页的模板template
     # 模板template定义了网页的结构
 
+@login_required
+#login_required()的代码检查用户是否已登录，仅当用户已登录时，Django才运行topics() 的代码。如果用户未登录，就重定向到登录页面
 def topics(request):
     """显示所有的主题 topics"""
     topics = Topic.objects.order_by('date_added') # Topic是一个Model子类，objects.order_by()是这个类中的方法
     context = {'topics': topics}
     return render(request, 'learning_logs/topics.html', context)
 
+@login_required
 def topic(request, topic_id): # 函数topic()捕获用户输入的URL中topic_id的值，并将其存储到形参topic_id中
     """显示单个主题topic及其所有的条目"""
     topic = Topic.objects.get(id=topic_id) # 我们使用get()来获取指定id的主题
@@ -25,6 +30,7 @@ def topic(request, topic_id): # 函数topic()捕获用户输入的URL中topic_id
     context = {'topic': topic, 'entries': entries} # 将主题和条目都存储在字典context中
     return render(request, 'learning_logs/topic.html', context) # 再将这个字典context传给render(), 从而传给模板topic.html
 
+@login_required
 def new_topic(request):
     """添加新主题new topic"""
     if request.method != 'POST': # 情形1:用户刚进入new_topic网页(在这种情况下，它应显示一个空表单)
@@ -42,6 +48,7 @@ def new_topic(request):
     context = {'form': form}
     return render(request, 'learning_logs/new_topic.html', context)
 
+@login_required
 def new_entry(request, topic_id):  #形参 topic_id，用于存储从URL中获得的值
     """在特定的主题topic中添加新条目new entry"""
     topic = Topic.objects.get(id=topic_id)    #从数据库中获取特定主题topic
@@ -62,6 +69,7 @@ def new_entry(request, topic_id):  #形参 topic_id，用于存储从URL中获�
     context = {'topic': topic, 'form': form}
     return render(request, 'learning_logs/new_entry.html', context)
 
+@login_required
 def edit_entry(request, entry_id):
     """编辑既有条目edit existing entry"""
     #获取用户要修改的条目对象，以及与该条目相关联的主题

@@ -1,11 +1,13 @@
 # -*- coding: UTF-8 -*-
 from django.db import models
+from django.contrib.auth.models import User # 导入了django.contrib.auth中的模型User
 
 # Create your models here.
 class Topic(models.Model):    #创建了一个名为Topic的类，它继承了models模块中的Model类
     """用户学习的主题"""
     text = models.CharField(max_length=200) #Topic主题类/模型的属性有：text, date_added
     date_added = models.DateTimeField(auto_now_add=True)
+    owner = models.ForeignKey(User, on_delete=models.CASCADE) # 添加字段owner：它建立到模型User的外键关系
 
     def __str__(self):
         """返回模型的字符串表示"""

@@ -27,5 +27,5 @@ urlpatterns = [
     # URL中必须包含'learning_logs/',因为这里的第一个参数包含了'learning_logs/', http://127.0.0.1:8000/learning_logs
     # 如果希望URL中不包含'learning_logs/'，这里第一个参数就必须为空 http://127.0.0.1:8000/
     path('', include('learning_logs.urls')),
-    path('users/', include('users.urls')),
+    path('users/', include('users.urls')),  #这行代码与任何以单词users 打头的URL(如http://localhost:8000/users/login/)都匹配
 ]

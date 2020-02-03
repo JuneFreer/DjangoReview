@@ -122,3 +122,8 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
 
 STATIC_URL = '/static/'
+
+# 我的设置 my settings
+# 现在，如果未登录的用户请求装饰器@login_required的保护页面，
+# Django将重定向到settings.py中的LOGIN_URL指定的URL
+LOGIN_URL = '/users/login/' # 登录页面

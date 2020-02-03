@@ -1,0 +1,18 @@
+{% extends "learning_logs/base.html" %}
+
+{% block content %}
+
+  {% if form.errors %} <!--如果表单的errors属性被设置，我们就显示一条错误消息-->
+  <p>Your username and password didn't match. Please try again.</p>
+  {% endif %}
+
+  <form method="post" action="{% url 'users:login' %}">
+  <!--我们要让登录视图处理表单，因此将实参action设置为登录页面的URL,登录视图将一个表单发送给模板login.html-->
+    {% csrf_token %}
+    {{ form.as_p }}
+
+    <button name="submit">log in</button>
+    <input type="hidden" name="next" value="{% url 'learning_logs:index' %}" /> <!--隐藏的表单元素——'next': 它的实参value告诉Django在用户成功登 录后将其重定向到什么地方,在这里是主页http://127.0.0.1:8000/-->
+  </form>
+  
+{% endblock content %}

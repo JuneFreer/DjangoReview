@@ -1,6 +1,16 @@
 <p>
   <a href="{% url 'learning_logs:index' %}">Learning Log</a>
   <a href="{% url 'learning_logs:topics' %}">Topics</a>
+  <!--在Django身份验证系统中，每个模板都可使用变量user，这个变量有一个is_authenticated 属性:
+  如果用户已登录，该属性将为True，否则为False.
+  这让你能够向已通过身份验证的用户显示一条消息("已登录")，而向未通过身份验证的用户显示另一条消息(一个到登录页面的超链接)-->
+  {% if user.is_authenticated %}
+    Hello, {{ user.username }}. <!--变量user的属性username，都是Django身份验证系统自带的-->
+    <a href="{% url 'users:logout' %}">log out</a>
+  {% else %}
+    <a href="{% url 'users:register' %}">register</a> <!--到注册页面users/register/的链接-->
+    <a href="{% url 'users:login' %}">log in</a> <!--到登录页面users/login/的链接-->
+  {% endif %}
 </p>
 
 {% block content %}{% endblock content %}

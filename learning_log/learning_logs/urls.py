@@ -2,9 +2,12 @@
 
 #from django.conf.urls import url
 from django.urls import include, path
+
 from . import views # 其中的句点让Python从当前的urls.py模块所在的文件夹中导入视图 views.py
 
 app_name = 'learning_logs' # 必须在learning_logs/urls.py中加上app_name属性,否则会出错：'learning_logs' is not a registered namespace
+#加入app_name属性的目的是，把learning_logs/urls.py与其他app/urls.py区分开来（命名空间问题）
+
 # 变量urlpatterns是一个列表，包含可在应用程序learning_logs中请求的网页
 urlpatterns = [
     # 主页 homepage: 'http://127.0.0.1:8000/'
