@@ -44,7 +44,9 @@ def new_topic(request):
         form = TopicForm(request.POST)    #使用用户输入的数据(它们存储在request.POST中)创建一个TopicForm实例,这样对象form将包含 用户提交的信息
         if form.is_valid(): #函数is_valid() 核实用户填写了所有必不可少的字段(表单字段默认都是必不可少的)，且输入的数据与要求的字段类型一致
         #这种自动验证避免了我们去做大量的工作
-            form.save()    #如果所有字段都有效，我们就可调用save(),将表单中的数据写入数据库
+            new_topic = form.save(commit=False)
+            new_topic.owner = request.user
+            new_topic.save()    #如果所有字段都有效，我们就可调用save(),将表单中的数据写入数据库
             return HttpResponseRedirect(reverse('learning_logs:topics'))
             #使用reverse()获取页面topics的URL，并将其传递给HttpResponseRedirect(),后者将用户的浏览器重定向到页面topics
 
@@ -54,7 +56,7 @@ def new_topic(request):
 @login_required
 def new_entry(request, topic_id):  #形参 topic_id，用于存储从URL中获得的值
     """在特定的主题topic中添加新条目new entry"""
-    topic = Topic.objects.get(id=topic_id)    #从数据库中获取特定主题topic
+    topic = Topic.objects.get(id=topic_id)    #从数据库中获取特定主题topic, 因为新条目要关联到特定的主题下
 
     if request.method != 'POST':
         # 未提交数据,创建一个空表单
@@ -64,8 +66,9 @@ def new_entry(request, topic_id):  #形参 topic_id，用于存储从URL中获�
         form = EntryForm(data=request.POST) #对用户输入表单的数据进行处理：创建一个EntryForm实例，使用request对象中的POST数据来填充它
         if form.is_valid():  #检查表单是否有效
             new_entry = form.save(commit=False) #让Django创建一个新的条目对象，并将其存储到new_entry中，但不将它保存到数据库中(实参commit=False)
+            new_entry.owner = request.user #在模型Entry中添加外键owner，在具体new_entry中将外键owner关联到当前登录的用户
             new_entry.topic = topic  #我们将new_entry的属性topic设置为在new_entry()函数开头从数据库中获取的主题topic
-        new_entry.save()  #将新条目对象保存到数据库, 并将其与正确的主题topic相关联
+        new_entry.save()  #将新条目对象保存到数据库, 并(在数据库表中)将其与正确的主题topic相关联
         return HttpResponseRedirect(reverse('learning_logs:topic',args=[topic_id]))
         #调用reverse()时，需要提供两个实参: 1.要根据它来生成URL的URL模式的名称name='topic'; 2.列表args，其中包含要包含在URL中的所有实参
 
