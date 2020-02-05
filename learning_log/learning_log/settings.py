@@ -38,7 +38,10 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
-    # My Apps
+    # 第三方应用程序 third party Apps(其他开发人员开发的应用程序)
+    'bootstrap3',
+
+    # 我的应用程序 My Apps
     'learning_logs',
      'users',
 ]
@@ -124,6 +127,10 @@ USE_TZ = True
 STATIC_URL = '/static/'
 
 # 我的设置 my settings
-# 现在，如果未登录的用户请求装饰器@login_required的保护页面，
-# Django将重定向到settings.py中的LOGIN_URL指定的URL
+'''现在，如果未登录的用户请求装饰器@login_required的保护页面，Django将重定向到settings.py中的LOGIN_URL指定的URL'''
 LOGIN_URL = '/users/login/' # 登录页面
+
+# django-bootstrap3的设置
+BOOTSTRAP3 = {
+    'include_jquery': True,
+}
