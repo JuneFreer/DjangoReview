@@ -132,5 +132,5 @@ LOGIN_URL = '/users/login/' # 登录页面
 
 # django-bootstrap3的设置
 BOOTSTRAP3 = {
-    'include_jquery': True,
+    'include_jquery': True, #这些代码让你无需手工下载jQuery并将其放到正确的地方
 }
